@@ -12,7 +12,7 @@ namespace ConsoleApplication5
     {
         static void Main(string[] args)
         {
-            new Day24A().Calculate();
+            new Day24().CalculateA();
 
             Console.WriteLine("\nDone.");
             Console.ReadKey();

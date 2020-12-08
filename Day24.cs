@@ -5,30 +5,44 @@ using System.Linq;
 
 namespace ConsoleApplication5
 {
-
-    internal class Day24A
-    {
-        public void Calculate()
-        {
-            var input = File.ReadAllLines("Day24_test.txt")
-                .Select(int.Parse)
-                .ToList();
-
-            var groupWeight = input.Sum() / 3;
-        }
-
-        public IEnumerable<List<int>> GetWaysToCreateSum(ICollection<int> packets, int targetWeight)
-        {
-            foreach (var pack in packets)
-            {
-                if(pack = targetWeight)
-            }
-        }
-    }
-
     internal class Day24
     {
-        public void Calculate()
+        public void CalculateA()
+        {
+            var input = File.ReadAllLines("Day24.txt");
+            List<int> weights = input.Select(int.Parse).ToList();
+            var tot = weights.Sum();
+            var perBox = tot / 3;
+
+            var node = new SumNode();
+            var possibleSum = FindPossibleSum(node, weights, 0, perBox);
+
+            var ordered = possibleSum.OrderBy(p => p._packages.Count).ThenBy(p2 => p2.QuantumEntanglement()).ToList();
+
+            for (int a = 0; a < ordered.Count; a++)
+            {
+                var nodeA = ordered[a];
+
+                for (int b = a + 1; b < ordered.Count; b++)
+                {
+                    var nodeB = ordered[b];
+                    if (!nodeA.IsCompatible(nodeB))
+                        continue;
+
+                    for (int c = b + 1; c < ordered.Count; c++)
+                    {
+                        var nodeC = ordered[c];
+                        if (!nodeA.IsCompatible(nodeC) || !nodeB.IsCompatible(nodeC))
+                            continue;
+
+                        Console.WriteLine($"Found it: {nodeA.QuantumEntanglement()}");
+                        return;
+                    }
+                }
+            }
+        }
+
+        public void CalculateB()
         {
             var input = File.ReadAllLines("Day24.txt");
             List<int> weights = input.Select(int.Parse).ToList();
@@ -69,7 +83,6 @@ namespace ConsoleApplication5
                     }
                 }
             }
-
         }
 
         private IEnumerable<SumNode> FindPossibleSum(SumNode startNode, List<int> weightsToTry, int startIdx, int sumToFind)
